@@ -5,25 +5,41 @@ import { useNavigation } from '@react-navigation/native';
 import supabase from "../lib/supabase";
 import { useRouter } from "expo-router";
 
-const LoginForm = () => {
-    const [isTouchedEmail, setIsTouchedEmail] = useState(false);
-    const [isEmailValid, setIsEmailValid] = useState(undefined);
+const SignupForm = () => {
+    const navigation = useNavigation();
+    const [isTouchedEmail, setIsTouchedEmail] = useState<boolean>(false);
+    const [isTouchedContactNumber, setIsTouchedContactNumber] = useState<boolean>(false);
+    const [isEmailValid, setIsEmailValid] = useState<boolean | undefined>(undefined);
+    const [isContactNumberValid, setIsContactNumberValid] = useState<boolean | undefined>(undefined);
     const [formData, setFormData] = useState({
         email: "",
         password: "",
+        first_name: "",
+        last_name: "",
+        contact_number: "",
     });
 
-    const validateEmailFormat = (email) => {
-        return email.match(/^[^@]+@[^@]+\.[^@]+$/);
-    }
+    const validateContactNumberFormat = (contact_number: string) => {
+        return contact_number.match(/^[0-9]{11}$/);
+    };
 
-    const validateEmail = (value) => {
+    const validateContactNumber = (value: string) => {
+        setIsContactNumberValid(undefined);
+        if (value === '') return;
+        validateContactNumberFormat(value) ? setIsContactNumberValid(true) : setIsContactNumberValid(false);
+    };
+
+    const validateEmailFormat = (email: string) => {
+        return email.match(/^[^@]+@[^@]+\.[^@]+$/);
+    };
+
+    const validateEmail = (value: string) => {
         setIsEmailValid(undefined);
         if (value === '') return;
         validateEmailFormat(value) ? setIsEmailValid(true) : setIsEmailValid(false);
     };
 
-    const handleChange = (name, value) => {
+    const handleChange = (name: string, value: string) => {
         setFormData((prevData) => ({
             ...prevData,
             [name]: value
@@ -32,7 +48,8 @@ const LoginForm = () => {
 
     const router = useRouter()
 
-    const doSignUp = async (event) => {
+    const doSignUp = async (event: any) => {
+        if (isEmailValid && isContactNumberValid){
         event.preventDefault();
         const { data, error } = await supabase.auth.signUp({
             email: formData.email,
@@ -57,24 +74,27 @@ const LoginForm = () => {
             await supabase.auth.signOut();
             router.push('/Login');
         }
-    };
-    const doLogin = async (event) =>{
-        event.preventDefault();
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: formData.email,
-            password: formData.password,
-        })
-        if (error){
-            Alert.alert("Error", "Invalid email or password");
-        }
-        else{
-            Alert.alert("Success", "Successful Login!");
-            router.replace('/Dashboard')
-        }
     }
+    else{
+        Alert.alert("Error", "Invalid email/number");
+    }
+    };
 
     return (
         <View>
+                
+                <TextInput
+                    style={styles.input}
+                    placeholder="First Name"
+                    value={formData.first_name}
+                    onChangeText={(value) => handleChange('first_name', value)}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Last Name"
+                    value={formData.last_name}
+                    onChangeText={(value) => handleChange('last_name', value)}
+                />
                 <TextInput
                     style={[styles.input, isEmailValid === false && styles.invalid, isTouchedEmail && styles.touched]}
                     placeholder="Email"
@@ -83,6 +103,7 @@ const LoginForm = () => {
                         handleChange('email', value);
                         validateEmail(value);
                     }}
+                    
                     keyboardType="email-address"
                 />
                 <TextInput
@@ -92,12 +113,23 @@ const LoginForm = () => {
                     onChangeText={(value) => handleChange('password', value)}
                     secureTextEntry
                 />
-                <Button
-                title="LOG IN"
-                variant="outlined"
-                onPress={doLogin}
+                <TextInput
+                    style={[styles.input, isContactNumberValid === false && styles.invalid, isTouchedContactNumber && styles.touched]}
+                    placeholder="Contact Number"
+                    value={formData.contact_number}
+                    onChangeText={(value) => {
+                        handleChange('contact_number', value);
+                        validateContactNumber(value);
+                    }}
+                    
+                    keyboardType="numeric"
+                    
+                />
+            <Button
+                variant="outline"
+                onPress={doSignUp}
                 style={styles.button}
-            ><ButtonText>LOG IN</ButtonText>
+            ><ButtonText>SUBMIT</ButtonText>
             </Button>
                 
             </View>
@@ -121,10 +153,13 @@ const LoginForm = () => {
         invalid: {
             borderColor: 'red',
         },
+        touched: {
+            borderColor: 'blue',
+        },
         button: {
             backgroundColor: '#028391'
         }
     });
     
-    export default LoginForm;
+    export default SignupForm;
     

@@ -1,3 +1,4 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 import { useState } from 'react';
@@ -15,7 +16,7 @@ export default function Login() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <View style={styles.container}>
             <Heading size="xl">Log in</Heading>
-            <Box w='$72'>
+            <Box width="90%">
               <LoginForm></LoginForm>
             </Box>
             <StatusBar style="auto" />

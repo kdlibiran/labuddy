@@ -6,6 +6,7 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react-native';
 import { GluestackUIProvider } from '@gluestack-ui/themed';
 import { config } from '@gluestack-ui/config';
 import { useRouter } from "expo-router";
+import React from 'react';
 
 export default function App() {
   const [showPassword, setShowPassword] = useState(false)
@@ -18,14 +19,14 @@ export default function App() {
   return (
     <GluestackUIProvider config={config}>
       <View style={styles.container}>
-        <Box w="$72">
+        <Box width="90%">
           <FormControl
-            p="$4"
-            borderWidth="$1"
-            borderRadius="$lg"
+            padding={4}
+            borderWidth={1}
+            borderRadius={8}
             borderColor="$borderLight300"
-            $dark-borderWidth="$1"
-            $dark-borderRadius="$lg"
+            $dark-borderWidth={1}
+            $dark-borderRadius={8}
             $dark-borderColor="$borderDark800"
           >
             <VStack space="xl">
@@ -33,7 +34,7 @@ export default function App() {
                 Login to Labuddy 
               </Heading>
               <VStack space="xs">
-                <Text color="$text500" lineHeight="$xs">
+                <Text color="$text500" lineHeight="$sm">
                   Email
                 </Text>
                 <Input>
@@ -41,13 +42,12 @@ export default function App() {
                 </Input>
               </VStack>
               <VStack space="xs">
-                <Text color="$text500" lineHeight="$xs">
+                <Text color="$text500" lineHeight="$sm">
                   Password
                 </Text>
-                <Input textAlign="center">
-                  <InputField type={showPassword ? "text" : "password"} />
-                  <InputSlot pr="$3" onPress={handleState}>
-                    {/* EyeIcon, EyeOffIcon are both imported from 'lucide-react-native' */}
+                <Input>
+                  <InputField textAlign="center" type={showPassword ? "text" : "password"} />
+                  <InputSlot paddingRight={3} onPress={handleState}>
                     <InputIcon
                       as={showPassword ? EyeIcon : EyeOffIcon}
                       color="$darkBlue500"
@@ -56,7 +56,7 @@ export default function App() {
                 </Input>
               </VStack>
               <Button
-                ml="auto"
+                marginLeft="auto"
                 onPress={() => {
                   //nav to next
                   {router.push('/dashboard.js')}

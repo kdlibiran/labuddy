@@ -44,8 +44,16 @@ import {
 import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { config } from "@gluestack-ui/config";
 import supabase from "../lib/supabase";
+import React from "react";
 
-export default function LabuddyCard({ labuddy, cost, perKilo, maxload }) {
+type LabuddyCardProps = {
+    labuddy: any;
+    cost: number;
+    perKilo: boolean;
+    maxload: number;
+}
+
+export default function LabuddyCard({ labuddy, cost, perKilo, maxload }: LabuddyCardProps) {
     const color_weight = labuddy.color_weight;
     const white_weight = labuddy.white_weight;
     const color_weight_limit = labuddy.color_weight_limit;
@@ -64,7 +72,7 @@ export default function LabuddyCard({ labuddy, cost, perKilo, maxload }) {
         fetchData();
     }, []);
 
-    function calcNumLoads(weight, maxload) {
+    function calcNumLoads(weight: number, maxload: number) {
         if (maxload === 0 || maxload == null || isNaN(maxload)) 
             return 0;
         
@@ -94,10 +102,10 @@ export default function LabuddyCard({ labuddy, cost, perKilo, maxload }) {
         <GluestackUIProvider config={config}>
             <Box
                 style={{ flex: 1 }}
-                p="$4"
-                borderWidth="$1"
-                h="$200"
-                borderRadius="$lg"
+                padding={4}
+                borderWidth={1}
+                height={200}
+                borderRadius={10}
                 borderColor="$borderLight300"
             >
                 <VStack space="xs">
@@ -133,7 +141,7 @@ export default function LabuddyCard({ labuddy, cost, perKilo, maxload }) {
                         {color_weight} kg / {color_weight_limit} kg{" "}
                         {is_color_full ? " |  Color bin full!" : ""}
                     </Text>
-                    <Text size="xs" color="black" bold="true">
+                    <Text size="xs" color="black" bold={true}>
                         Cost:{" "}
                         {perKilo
                             ? cost * (white_weight + color_weight)

@@ -6,7 +6,7 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react-native';
 import { config } from '@gluestack-ui/config';
 import { useRouter, Link } from "expo-router";
 import SignupForm from './SignupForm';
-
+import React from 'react';
 export default function App() {
   const router = useRouter()
   return (
@@ -16,7 +16,7 @@ export default function App() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.container}>
           <Heading size="xl">Sign up to Labuddy</Heading>
-          <Box w='$72'>
+          <Box width="90%">
             <SignupForm></SignupForm>
             <Text>Already have an account?</Text>
             <Link href="/Login" asChild>
